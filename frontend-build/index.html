@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssistZap Pro - Automação de WhatsApp com IA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .sidebar {
+            width: 250px;
+            transition: all 0.3s;
+        }
+        .content {
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .sidebar.active {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="sidebar bg-blue-900 text-white h-full fixed">
+            <div class="p-4 flex items-center justify-between">
+                <h1 class="text-xl font-bold">AssistZap Pro</h1>
+                <button id="close-sidebar" class="md:hidden">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-6">
+                <ul>
+                    <li class="mb-2">
+                        <a href="#dashboard" class="flex items-center p-3 hover:bg-blue-800 rounded-lg active-nav">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            <span>Painel</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#whatsapp" class="flex items-center p-3 hover:bg-blue-800 rounded-lg">
+                            <i class="fab fa-whatsapp mr-3"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#flows" class="flex items-center p-3 hover:bg-blue-800 rounded-lg">
+                            <i class="fas fa-project-diagram mr-3"></i>
+                            <span>Fluxos</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#history" class="flex items-center p-3 hover:bg-blue-800 rounded-lg">
+                            <i class="fas fa-history mr-3"></i>
+                            <span>Histórico</span>
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#settings" class="flex items-center p-3 hover:bg-blue-800 rounded-lg">
+                            <i class="fas fa-cog mr-3"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="absolute bottom-0 w-full p-4 border-t border-blue-800">
+                <a href="#" id="logout-btn" class="flex items-center text-white">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content flex-1 overflow-auto">
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center p-4">
+                    <button id="toggle-sidebar" class="md:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <span class="mr-2">Admin</span>
+                        <img src="https://via.placeholder.com/40" alt="Profile" class="w-8 h-8 rounded-full">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-6">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="page-section">
+                    <h2 class="text-2xl font-bold mb-6">Painel</h2>
+                    
+                    <!-- Status do Sistema -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Status do Sistema</h3>
+                        <div class="flex items-center text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <p>Seu sistema de atendimento automatizado via WhatsApp está conectado e funcionando normalmente.</p>
+                        </div>
+                        
+                        <h4 class="font-medium mt-4 mb-2">Próximos Passos:</h4>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-2">•</span>
+                                <span>Personalize suas mensagens automáticas na página de Fluxos de Atendimento</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-2">•</span>
+                                <span>Configure a integração com IA na página de Configurações</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-2">•</span>
+                                <span>Monitore as conversas na página de Histórico</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Métricas -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center mb-4">
+                                <div class="p-3 rounded-full bg-green-100 text-green-500 mr-4">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Total de Conversas</h3>
+                                    <p class="text-gray-500 text-sm">Últimas 24 horas</p>
+                                </div>
+                            </div>
+                            <p class="text-3xl font-bold">1</p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center mb-4">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Fluxos Ativos</h3>
+                                    <p class="text-gray-500 text-sm">Configurados</p>
+                                </div>
+                            </div>
+                            <p class="text-3xl font-bold">1</p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <div class="flex items-center mb-4">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-500 mr-4">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Mensagens Recebidas</h3>
+                                    <p class="text-gray-500 text-sm">Últimas 24 horas</p>
+                                </div>
+                            </div>
+                            <p class="text-3xl font-bold">2</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Status do WhatsApp -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Status do WhatsApp</h3>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                            <p class="font-medium">Conectado</p>
+                        </div>
+                        <p class="text-gray-600 mt-2 text-sm">Última atualização: há 5 minutos</p>
+                    </div>
+                </section>
+
+                <!-- WhatsApp Section -->
+                <section id="whatsapp-section" class="page-section hidden">
+                    <h2 class="text-2xl font-bold mb-6">Conexão com WhatsApp</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Status da Conexão</h3>
+                        <div class="flex items-center text-green-600 mb-4">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <p>WhatsApp conectado e funcionando</p>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                <i class="fas fa-power-off mr-2"></i>
+                                Desconectar
+                            </button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                <i class="fas fa-sync mr-2"></i>
+                                Reconectar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Conectar Novo Dispositivo</h3>
+                        <p class="mb-4">Para conectar um novo dispositivo, escaneie o QR Code abaixo com seu WhatsApp:</p>
+                        
+                        <div class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg mb-4">
+                            <img src="https://via.placeholder.com/250" alt="QR Code" class="mb-4">
+                            <p class="text-gray-500 text-sm">Este QR Code expira em 60 segundos</p>
+                        </div>
+                        
+                        <button class="px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800">
+                            <i class="fas fa-qrcode mr-2"></i>
+                            Gerar Novo QR Code
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Flows Section -->
+                <section id="flows-section" class="page-section hidden">
+                    <h2 class="text-2xl font-bold mb-6">Fluxos de Atendimento</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Fluxos Configurados</h3>
+                            <button class="px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800">
+                                <i class="fas fa-plus mr-2"></i>
+                                Novo Fluxo
+                            </button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 px-4 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gatilho</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="py-3 px-4 border-b border-gray-200 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="py-4 px-4 border-b border-gray-200">
+                                            <div class="flex items-center">
+                                                <div class="text-sm font-medium text-gray-900">Atendimento Inicial</div>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 px-4 border-b border-gray-200">
+                                            <div class="text-sm text-gray-500">Mensagem de boas-vindas</div>
+                                        </td>
+                                        <td class="py-4 px-4 border-b border-gray-200">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>
+                                        </td>
+                                        <td class="py-4 px-4 border-b border-gray-200 text-sm">
+                                            <button class="text-blue-600 hover:text-blue-900 mr-3">Editar</button>
+                                            <button class="text-red-600 hover:text-red-900">Excluir</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Editor de Fluxos</h3>
+                        <p class="mb-4">Selecione um fluxo existente para editar ou crie um novo fluxo.</p>
+                        
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center">
+                            <i class="fas fa-project-diagram text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-500">Nenhum fluxo selecionado</p>
+                            <button class="mt-4 px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800">
+                                <i class="fas fa-plus mr-2"></i>
+                                Criar Novo Fluxo
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- History Section -->
+                <section id="history-section" class="page-section hidden">
+                    <h2 class="text-2xl font-bold mb-6">Histórico de Conversas</h2>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold flex items-center">
+                                <i class="fas fa-history mr-2"></i>
+                                Conversas Recentes
+                            </h3>
+                            
+                            <div class="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Buscar conversas..."
+                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1 border-r pr-4">
+                                <h4 class="font-medium mb-4">Clientes</h4>
+                                
+                                <div class="space-y-2">
+                                    <div class="p-3 rounded-lg cursor-pointer bg-blue-50 border border-blue-200">
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-user text-gray-400 mr-2"></i>
+                                            <span class="font-medium">+5511999999999</span>
+                                        </div>
+                                        <div class="flex items-center text-sm text-gray-500">
+                                            <i class="fas fa-comment-alt mr-1"></i>
+                                            <span class="truncate">Qual o preço?</span>
+                                        </div>
+                                        <div class="text-xs text-gray-400 mt-1 flex items-center">
+                                            <i class="fas fa-calendar-alt mr-1"></i>
+                                            16/05/2025 19:00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <h4 class="font-medium mb-4">Detalhes da Conversa</h4>
+                                
+                                <div>
+                                    <div class="bg-gray-100 p-3 rounded-lg mb-4">
+                                        <span class="font-medium">Cliente:</span> +5511999999999
+                                    </div>
+                                    
+                                    <div class="space-y-4 max-h-96 overflow-y-auto p-2">
+                                        <div class="flex justify-start">
+                                            <div class="max-w-xs md:max-w-md rounded-lg p-3 bg-gray-100 text-gray-800">
+                                                <p>Qual o preço?</p>
+                                                <p class="text-xs mt-1 text-gray-500">16/05/2025 19:00</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex justify-end">
+                                            <div class="max-w-xs md:max-w-md rounded-lg p-3 bg-blue-600 text-white">
+                                                <p>O preço é R$ 99,90, com desconto hoje!</p>
+                                                <p class="text-xs mt-1 text-blue-100">16/05/2025 19:00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Relatórios</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Taxa de Resposta</h4>
+                                <p class="text-3xl font-bold text-green-600">100%</p>
+                                <p class="text-sm text-gray-500">Mensagens respondidas automaticamente</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Conversas Convertidas</h4>
+                                <p class="text-3xl font-bold text-blue-600">0</p>
+                                <p class="text-sm text-gray-500">Levaram a um link de pagamento</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-medium mb-2">Volume de Mensagens</h4>
+                                <p class="text-3xl font-bold text-yellow-600">2</p>
+                                <p class="text-sm text-gray-500">Mensagens nas últimas 24h</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings-section" class="page-section hidden">
+                    <h2 class="text-2xl font-bold mb-6">Configurações</h2>
+                    
+                    <!-- Personalização da IA -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i class="fas fa-cog mr-2"></i>
+                            Personalização da IA
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Nome da IA
+                                </label>
+                                <input 
+                                    type="text" 
+                                    value="AssistZap Pro"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                >
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Tom de Voz
+                                </label>
+                                <input 
+                                    type="text" 
+                                    value="educado, informal"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Mensagem Inicial
+                            </label>
+                            <textarea 
+                                rows="2"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >Olá, bem-vindo! Quer saber mais sobre nossos produtos?</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Instruções Personalizadas -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i class="fas fa-comment-alt mr-2"></i>
+                            Instruções Personalizadas
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Prompt Principal
+                            </label>
+                            <textarea 
+                                rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >Você é AssistZap Pro, um vendedor de [produto]. Converse de forma amigável e persuasiva.</textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Técnicas de Vendas
+                                </label>
+                                <textarea 
+                                    rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                >Oferecer desconto por tempo limitado
+Mencionar clientes satisfeitos</textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Respostas a Objeções
+                                </label>
+                                <textarea 
+                                    rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                >{"Está caro": "Entendo, mas o valor traz retorno rápido!"}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Gatilhos Mentais
+                                </label>
+                                <textarea 
+                                    rows="3"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                >Urgência: "Oferta válida hoje!"
+Escassez: "Últimas unidades!"</textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Estratégias de Fechamento
+                                </label>
+                                <input 
+                                    type="text" 
+                                    value='Pergunte: "Posso enviar o link de pagamento?"'
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Treinamento da IA -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i class="fas fa-robot mr-2"></i>
+                            Treinamento da IA
+                        </h3>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg h-64 overflow-y-auto mb-4 border border-gray-200">
+                            <div class="flex flex-col items-center justify-center h-full text-gray-500">
+                                <i class="fas fa-robot text-3xl mb-2 opacity-30"></i>
+                                <p>Inicie uma conversa para treinar a IA</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex mb-4">
+                            <input 
+                                type="text" 
+                                class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                placeholder="Digite uma mensagem para treinar a IA..."
+                            >
+                            <button 
+                                class="px-4 py-2 bg-blue-900 text-white rounded-r-md hover:bg-blue-800"
+                            >
+                                Enviar
+                            </button>
+                        </div>
+                        
+                        <button 
+                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        >
+                            Salvar Treinamento
+                        </button>
+                    </div>
+                    
+                    <!-- Integração de IA -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4 flex items-center">
+                            <i class="fas fa-code mr-2"></i>
+                            Integração de IA
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Provedor de IA
+                                </label>
+                                <select 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="deepseek" selected>DeepSeek</option>
+                                    <option value="openai">OpenAI</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Chave da API
+                                </label>
+                                <input 
+                                    type="password" 
+                                    placeholder="Insira sua chave de API"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rastreamento -->
+                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                        <h3 class="text-xl font-semibold mb-4">Rastreamento</h3>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Facebook Pixel
+                            </label>
+                            <textarea 
+                                rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" 
+                                placeholder="<script>!function(f,b,e,v,n,t,s){...}</script>"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Google Tag Manager
+                            </label>
+                            <textarea 
+                                rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" 
+                                placeholder="<script>(function(w,d,s,l,i){...}</script>"
+                            ></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Botão Salvar -->
+                    <div class="flex justify-end">
+                        <button 
+                            class="px-6 py-3 bg-blue-900 text-white rounded-md hover:bg-blue-800 flex items-center"
+                        >
+                            <i class="fas fa-save mr-2"></i>
+                            Salvar Todas as Configurações
+                        </button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Login Modal (Hidden by default) -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-900">AssistZap Pro</h2>
+                <p class="text-gray-600">Faça login para acessar o painel</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="username">
+                        Usuário
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                        placeholder="Digite seu usuário"
+                        required
+                    >
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="password">
+                        Senha
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                        placeholder="Digite sua senha"
+                        required
+                    >
+                </div>
+                
+                <button 
+                    type="submit"
+                    class="w-full px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800"
+                >
+                    Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.add('active');
+        });
+        
+        document.getElementById('close-sidebar').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+        });
+        
+        // Navigation
+        const navLinks = document.querySelectorAll('.sidebar a');
+        const sections = document.querySelectorAll('.page-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(link => link.classList.remove('active-nav', 'bg-blue-800'));
+                
+                // Add active class to clicked link
+                this.classList.add('active-nav', 'bg-blue-800');
+                
+                // Hide all sections
+                sections.forEach(section => section.classList.add('hidden'));
+                
+                // Show the corresponding section
+                const sectionId = this.getAttribute('href').substring(1) + '-section';
+                document.getElementById(sectionId).classList.remove('hidden');
+                
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth < 768) {
+                    document.querySelector('.sidebar').classList.remove('active');
+                }
+            });
+        });
+        
+        // Login functionality
+        const loginModal = document.getElementById('login-modal');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // Check if user is logged in
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                loginModal.style.display = 'none';
+            } else {
+                loginModal.style.display = 'flex';
+            }
+        }
+        
+        // Handle login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple authentication (in production, this would be a server request)
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                loginModal.style.display = 'none';
+            } else {
+                alert('Credenciais inválidas. Tente: admin / admin123');
+            }
+        });
+        
+        // Handle logout
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            checkLogin();
+        });
+        
+        // Check login status on page load
+        checkLogin();
+    </script>
+</body>
+</html>
